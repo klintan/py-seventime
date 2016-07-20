@@ -1,55 +1,69 @@
+import json
+import requests
+import sys
+import urllib
+
 class Seventime:
-	def __init__(self,url,data,headers,session):
-		url = 'https://app.seventime.se/loginFromApp'
-		data = {'username': '', 'password': ''}
-		headers = {'content-type': 'application/json'}
-		#create session
-		session=requests.Session()
+    def __init__(self, username='', password=''):
+        self.base_url =  'https://app.seventime.se/'
+        login_url = self.base_url + 'loginFromApp'
+        data = {'username': username , 'password': password}
+        self.headers = {'content-type': 'application/json'}
+        #create session
+        self.session=requests.Session()
+        self.attributes = ['startDate','workLeaderName', 'endDate','customerName', 'invoiceRows', 'color', 'acceptedDate', 'inProgressByUserName', 'workOrderUserSkills', 'acceptedWithSignature', 'supplementOrder', 'documents', 'checkLists',
+        'createdByUserName', 'billingMethod', 'workAddress', 'completedDate', 'signaturePath', 'users', 'archivedDate', 'fixedPrice', 'completedByUser', 'title', 'estimatedTime', 'checkList', 'createDate', 'comments', '__v',
+        'projectPlanItem', 'workOrderTypeName', 'inProgressByUser', 'projectPlanItemName', 'status', 'customer', 'inProgressDate', 'description', 'tags', 'modifiedByUserName', 'projectName', 'partTimeResources', 'archived', 'contactPerson',
+        'runningInvoiceSettings', 'formatType', 'includeUser', 'includeCategory', 'includeDateRange', 'includeDescription', 'includeDate', 'includeProject', 'createdByUser', 'modifiedDate',
+        'supplementOrderNumber', 'workOrderType', 'modifiedByUser', 'workOrderUserWorkTypes', 'invoiceStatus', 'contactPersonName', 'reminders', 'systemAccount', 'workLeader', 'project', 'checkListSpecification',
+        'completedByUserName', 'workOrderNumber', '_id', 'todoItems']
 
-		def createWorkorder(self,workorder):
-			headers = {'content-type': 'application/json'}
-			url = "https://app.seventime.se/workorders"
-			workorder_data = gcal #{'user':'0', 'workOrderStatus':'300', 'groupingKey':'day','sortDirection':'desc'}
-			result=session.post(url, data=json.dumps(gcal), headers=headers)
+        ra=self.session.post(login_url, data=json.dumps(data), headers=self.headers)
 
-			return result
+    def get_attributes(self):
+        return self.attributes
 
-		def createCustomers(self,name,address=None, city=None, zipcode=None, email=None, phone=None):
-			headers = {'content-type': 'application/json'}
-			url = "https://app.seventime.se/customers"
-			#customer_data = gcal #{'user':'0', 'workOrderStatus':'300', 'groupingKey':'day','sortDirection':'desc'}
-			result=session.post(url, data=json.dumps(gcal), headers=headers)
+    def create_workorder(self,workorder):
+            #create a new workorder
+            url = self.base_url + 'workorders'
+            result= self.session.post(url, data=json.dumps(workorder), headers=self.headers)
 
-			return customerID
+            return result
 
-		def updateWorkorder(self,id):
-			#update an existing workorder if changed in gcal
-			#PUT request to update an existing workorder
-			session=requests.Session()
-			ra=session.put(url, data=json.dumps(data), headers=headers)
+    def create_customer(self,name,address=None, city=None, zipcode=None, email=None, phone=None):
+            url = self.base_url + 'customers'
+            customer_data = gcal #{'user':'0', 'workOrderStatus':'300', 'groupingKey':'day','sortDirection':'desc'}
+            result= self.session.post(url, data=json.dumps(gcal), headers=self.headers)
+            print result
+            return customerID
 
-		def updateCustomer(self,id):
-			#update an existing workorder if changed in gcal
-			#PUT request to update an existing workorder
-			session=requests.Session()
-			ra=session.put(url, data=json.dumps(data), headers=headers)
+    def update_workorder(self,id):
+            #update an existing workorder
+            #PUT request to update an existing workorder
+            url = self.base_url + 'customers'
+            session=requests.Session()
+            ra= self.session.put(url, data=json.dumps(data), headers=headers)
+            return ra
 
-		def getCustomerID(self,customer):
+    def get_customer_id(self,customer):
+            url = self.base_url + 'customers'
+            customer_enc = urllib.quote_plus(customer.encode('utf8'))
+            params = {"queryValue": customer_enc}
+            data= self.session.get(url+"queryValue="+customer_enc, headers=headers)
+            try:
+                customerid = json.loads(data.text)[0]['_id']
+            except Exception, e:
+                print e
+                return ""
 
-			customer_enc = urllib.quote_plus(customer.encode('utf8'))
-			params = {"queryValue": customer_enc}
-			data=session.get(url+"queryValue="+customer_enc, headers=headers)
-			try:
-				customerid = json.loads(data.text)[0]['_id']
-			except Exception, e:
-				print e
-				return ""
-	
-			return customerid
+            return customerid
 
-		def getWorkorders(self,id=None):
-			orders = []
-			headers = {'content-type': 'application/json'}
-			url = "https://app.seventime.se/workorders"
-			result=session.get(url, headers=headers)
-			return json.loads(result.text)
+    def get_workorders(self,id=None):
+            workorders_url = self.base_url + 'workorders'
+            orders = []
+            result= self.session.get(workorders_url, headers=self.headers)
+            return json.loads(result.text)
+
+    def logout(self):
+            logout_url = self.base_url + 'logout'
+            result=self.session.get(logout_url, headers=self.headers)
