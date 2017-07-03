@@ -7,9 +7,13 @@ Mostly low level functions, but will perhaps add higher level functionality in t
 
 ## Installation
 
-
+```
+python setup.py install
+```
 
 ## Usage
+
+Get all your customers
 
 ```
 from seventime import Seventime
@@ -22,3 +26,13 @@ for customer in customers:
     print(customer)
 
 ```
+
+Get specific customer by customer id
+
+```
+## Get customer by id
+customer = st.get_customer(id="<customerid>")
+print(customer)
+```
+
+
