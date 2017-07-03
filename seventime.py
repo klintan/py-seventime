@@ -1,10 +1,7 @@
 import json
 import requests
-import sys
 import urllib
-
 from dateutil import parser
-from datetime import datetime
 
 class Seventime:
     def __init__(self, username='', password=''):
@@ -74,8 +71,8 @@ class Seventime:
             data = self.session.get(url+"queryValue="+customer_enc, headers=self.headers)
             try:
                 customerid = json.loads(data.text)[0]['_id']
-            except Exception, e:
-                print e
+            except Exception as e:
+                print(e)
                 return ""
 
             return customerid
@@ -93,8 +90,8 @@ class Seventime:
     def get_customer_time(self,customer,start_date="2010",end_date="2017"):
         start_date = parser.parse(start_date).isoformat()
         end_date = parser.parse(end_date).isoformat()
-        print "seventime customer"
-        print customer
+        print("seventime customer")
+        print(customer)
 
         timelog_url = self.base_url + 'timelogs'
         params = {"start_date": start_date,
