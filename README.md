@@ -13,10 +13,7 @@ python setup.py install
 
 ## Usage
 
-
-### Customer operations
-
-##### Get all your customers
+Get all your customers
 
 ```
 from seventime import Seventime
@@ -30,34 +27,12 @@ for customer in customers:
 
 ```
 
-##### Get specific customer by customer id
+Get specific customer by customer id
 
 ```
 ## Get customer by id
 customer = st.get_customer(id="<customerid>")
 print(customer)
-```
-
-
-### Workorder operations
-
-##### Get list of workorders
-
-Specify the date range start and end, if no range you will get all workorders
-
-```
-## Get list of workorders
-workorders = st.get_workorder_list()
-print(workorders)
-```
-
-##### Create new workorder
-
-```
-## Get list of workorders
-workorder = {}
-workorder = st.create_workorder(workorder)
-print(workorder)
 ```
 
 

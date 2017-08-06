@@ -155,5 +155,5 @@ class Seventime:
         result = self.session.get(self.LOGOUT_URL, headers=self.headers)
 
     def login(self, username, password):
-        result = self.session.post(self.LOGIN_URL, data=json.dumps({'username': username, 'password': password}),
+        ra = self.session.post(self.LOGIN_URL, data=json.dumps({'username': username, 'password': password}),
                                headers=self.headers)
