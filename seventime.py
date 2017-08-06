@@ -81,7 +81,10 @@ class Seventime:
         return self.customer_attributes
 
     def get_customer_transform_key(self, key):
-        return self.customer_transform_key[key]
+        if key in self.customer_transform_key:
+            return self.customer_transform_key[key]
+        else:
+            return None
 
     def create_customer(self, name, address=None, city=None, zipcode=None, email=None, phone=None):
         customer_data = gcal  # {'user':'0', 'workOrderStatus':'300', 'groupingKey':'day','sortDirection':'desc'}
@@ -130,7 +133,10 @@ class Seventime:
         return self.workorder_attributes
 
     def get_workorder_transform_key(self, key):
-        return self.workorder_transform_key[key]
+        if key in self.workorder_transform_key:
+            return self.workorder_transform_key[key]
+        else:
+            return None
 
     def create_workorder(self, workorder):
         # create a new workorder
