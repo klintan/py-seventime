@@ -72,7 +72,6 @@ class Seventime:
                                        '__v': '', 'paymentDays': '', '_id': 'seventime_id', 'notes': '',
                                        'documents': ''}
 
-
     ###
     ### Customer methods
     ###
@@ -149,9 +148,20 @@ class Seventime:
         ra = self.session.put(self.WORKORDERS_URL, data=json.dumps(data), headers=headers)
         return ra
 
-    def get_workorder_list(self, id=None, start_date=None, end_date=None):
-        result = self.session.get(self.WORKORDERS_URL, headers=self.headers)
+    def get_workorder(self, user=0, enable_part_time_resources=False, customer=None, workorder_status=100,
+                      archive_flag="ONLY_NOT_ARCHIVED", grouping_key="none", sort_direction="asc"):
+
+        params = {"enablePartTimeResources": enable_part_time_resources, "user": user, "customer": customer,
+                  "workOrderStatus": workorder_status, "archiveFlag": archive_flag, "groupingKey"grouping_key,
+                  "sortDirection": sort_direction}
+        result = self.session.get(self.WORKORDERS_URL, params=params, headers=self.headers)
         return json.loads(result.text)
+
+    ###
+    ### Reporting methods
+    ###
+
+
 
     ###
     ### Generic methods
@@ -161,5 +171,5 @@ class Seventime:
         result = self.session.get(self.LOGOUT_URL, headers=self.headers)
 
     def login(self, username, password):
-        ra = self.session.post(self.LOGIN_URL, data=json.dumps({'username': username, 'password': password}),
-                               headers=self.headers)
+        result = self.session.post(self.LOGIN_URL, data=json.dumps({'username': username, 'password': password}),
+                                   headers=self.headers)
