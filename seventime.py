@@ -152,7 +152,7 @@ class Seventime:
                       archive_flag="ONLY_NOT_ARCHIVED", grouping_key="none", sort_direction="asc"):
 
         params = {"enablePartTimeResources": enable_part_time_resources, "user": user, "customer": customer,
-                  "workOrderStatus": workorder_status, "archiveFlag": archive_flag, "groupingKey"grouping_key,
+                  "workOrderStatus": workorder_status, "archiveFlag": archive_flag, "groupingKey":grouping_key,
                   "sortDirection": sort_direction}
         result = self.session.get(self.WORKORDERS_URL, params=params, headers=self.headers)
         return json.loads(result.text)
