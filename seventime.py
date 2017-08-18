@@ -86,8 +86,13 @@ class Seventime:
             return None
 
     def create_customer(self, name, address=None, city=None, zipcode=None, email=None, phone=None):
-        customer_data = gcal  # {'user':'0', 'workOrderStatus':'300', 'groupingKey':'day','sortDirection':'desc'}
-        result = self.session.post(self.CUSTOMERS_URL, data=json.dumps(gcal), headers=self.headers)
+        customer_data = {"name":name,
+                         "address": address,
+                         "city": city,
+                         "zipcode": zipcode,
+                         "email":email,
+                         "phone":phone}
+        result = self.session.post(self.CUSTOMERS_URL, data=json.dumps(customer_data), headers=self.headers)
         return result
 
     def get_customer_id(self, customer):
