@@ -3,6 +3,21 @@ import requests
 import urllib
 from dateutil import parser
 
+class SeventimeAPIError(Exception):
+    "Base class for errors from Seventime"
+    def __init__(self, message, **kwargs):
+        super(SeventimeAPIError, self).__init__(message)
+
+        self.field = kwargs.get('field', None)
+        self.field_path = kwargs.get('field_path', None)
+
+        self.extra_data = kwargs
+        if 'field' in self.extra_data:
+            del self.extra_data['field']
+        if 'field_path' in self.extra_data:
+            del self.extra_data['field_path']
+        if not self.extra_data:
+            self.extra_data = None
 
 class Seventime:
     BASE_URL = 'https://app.seventime.se/'
@@ -93,7 +108,11 @@ class Seventime:
                          "email":email,
                          "phone":phone}
         result = self.session.post(self.CUSTOMERS_URL, data=json.dumps(customer_data), headers=self.headers)
-        return result
+        #return a python object
+        try:
+            return json.loads(result.text)
+        except:
+            return {"error": "Customer already exists"}
 
     def get_customer_id(self, customer):
         customer_enc = urllib.quote_plus(customer.encode('utf8'))
@@ -145,7 +164,10 @@ class Seventime:
     def create_workorder(self, workorder):
         # create a new workorder
         result = self.session.post(self.WORKORDERS_URL, data=json.dumps(workorder), headers=self.headers)
-        return result
+        try:
+            return json.loads(result.text)
+        except:
+            return {"error": "Customer already exists"}
 
     def update_workorder(self, id):
         # update an existing workorder
@@ -162,10 +184,20 @@ class Seventime:
         result = self.session.get(self.WORKORDERS_URL, params=params, headers=self.headers)
         return json.loads(result.text)
 
+
+    def get_workorder_list(self, id=None, start_date=None, end_date=None):
+        result = self.session.get(self.WORKORDERS_URL, headers=self.headers)
+        return json.loads(result.text)
+
     ###
     ### Reporting methods
     ###
 
+
+
+    ###
+    ### User methods
+    ###
 
 
     ###
