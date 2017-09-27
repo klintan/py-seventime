@@ -3,8 +3,10 @@ import requests
 import urllib
 from dateutil import parser
 
+
 class SeventimeAPIError(Exception):
     "Base class for errors from Seventime"
+
     def __init__(self, message, **kwargs):
         super(SeventimeAPIError, self).__init__(message)
 
@@ -19,6 +21,7 @@ class SeventimeAPIError(Exception):
         if not self.extra_data:
             self.extra_data = None
 
+
 class Seventime:
     BASE_URL = 'https://app.seventime.se/'
     WORKORDERS_URL = BASE_URL + 'workorders'
@@ -26,6 +29,7 @@ class Seventime:
     LOGOUT_URL = BASE_URL + 'logout'
     LOGIN_URL = BASE_URL + 'loginFromApp'
     TIMELOG_URL = BASE_URL + 'timelogs'
+    USERS_URL = BASE_URL + 'users'
 
     def __init__(self, username='', password=''):
         self.session = requests.Session()
@@ -101,14 +105,14 @@ class Seventime:
             return None
 
     def create_customer(self, name, address=None, city=None, zipcode=None, email=None, phone=None):
-        customer_data = {"name":name,
+        customer_data = {"name": name,
                          "address": address,
                          "city": city,
                          "zipcode": zipcode,
-                         "email":email,
-                         "phone":phone}
+                         "email": email,
+                         "phone": phone}
         result = self.session.post(self.CUSTOMERS_URL, data=json.dumps(customer_data), headers=self.headers)
-        #return a python object
+        # return a python object
         try:
             return json.loads(result.text)
         except:
@@ -179,11 +183,10 @@ class Seventime:
                       archive_flag="ONLY_NOT_ARCHIVED", grouping_key="none", sort_direction="asc"):
 
         params = {"enablePartTimeResources": enable_part_time_resources, "user": user, "customer": customer,
-                  "workOrderStatus": workorder_status, "archiveFlag": archive_flag, "groupingKey":grouping_key,
+                  "workOrderStatus": workorder_status, "archiveFlag": archive_flag, "groupingKey": grouping_key,
                   "sortDirection": sort_direction}
         result = self.session.get(self.WORKORDERS_URL, params=params, headers=self.headers)
         return json.loads(result.text)
-
 
     def get_workorder_list(self, id=None, start_date=None, end_date=None):
         result = self.session.get(self.WORKORDERS_URL, headers=self.headers)
@@ -198,7 +201,9 @@ class Seventime:
     ###
     ### User methods
     ###
-
+    def get_user_list(self, id=None):
+        result = self.session.get(self.USERS_URL, headers=self.headers)
+        return json.loads(result.text)
 
     ###
     ### Generic methods
